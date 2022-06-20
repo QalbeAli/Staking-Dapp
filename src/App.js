@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import Web3 from 'web3';
-import classes from './App.module.css';
-import TestToken from '../src/abis/TestToken.json';
-import TokenStaking from '../src/abis/TokenStaking.json';
-import Staking from './components/Staking';
-import AdminTesting from './components/AdminTesting';
-import Navigation from './components/Navigation';
+import React, { useState, useEffect } from "react";
+import Web3 from "web3";
+import classes from "./App.module.css";
+import TestToken from "../src/abis/TestToken.json";
+import TokenStaking from "../src/abis/TokenStaking.json";
+import Staking from "./components/Staking";
+import AdminTesting from "./components/AdminTesting";
+import Navigation from "./components/Navigation";
 
 const App = () => {
-  const [account, setAccount] = useState('Connecting to Metamask..');
-  const [network, setNetwork] = useState({ id: '0', name: 'none' });
-  const [testTokenContract, setTestTokenContract] = useState('');
-  const [tokenStakingContract, setTokenStakingContract] = useState('');
-  const [inputValue, setInputValue] = useState('');
-  const [contractBalance, setContractBalance] = useState('0');
+  const [account, setAccount] = useState("Connecting to Metamask..");
+  const [network, setNetwork] = useState({ id: "0", name: "none" });
+  const [testTokenContract, setTestTokenContract] = useState("");
+  const [tokenStakingContract, setTokenStakingContract] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [contractBalance, setContractBalance] = useState("0");
   const [totalStaked, setTotalStaked] = useState([0, 0]);
   const [myStake, setMyStake] = useState([0, 0]);
   const [appStatus, setAppStatus] = useState(true);
   const [loader, setLoader] = useState(false);
-  const [userBalance, setUserBalance] = useState('0');
+  const [userBalance, setUserBalance] = useState("0");
   const [apy, setApy] = useState([0, 0]);
   const [page, setPage] = useState(1);
 
@@ -34,7 +34,7 @@ const App = () => {
   const fetchDataFromBlockchain = async () => {
     if (window.ethereum) {
       // await window.ethereum.send('eth_requestAccounts');
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      await window.ethereum.request({ method: "eth_requestAccounts" });
       window.web3 = new Web3(window.ethereum);
 
       //connecting to metamask
@@ -62,7 +62,7 @@ const App = () => {
           .call();
         let convertedBalance = window.web3.utils.fromWei(
           testTokenBalance.toString(),
-          'Ether'
+          "Ether"
         );
         setUserBalance(convertedBalance);
 
@@ -75,14 +75,14 @@ const App = () => {
 
         convertedBalance = window.web3.utils.fromWei(
           totalStaked.toString(),
-          'Ether'
+          "Ether"
         );
         //removing initial balance
         setContractBalance(convertedBalance);
       } else {
         setAppStatus(false);
         window.alert(
-          'TestToken contract is not deployed on this network, please change to testnet'
+          "TestToken contract is not deployed on this network, please change to testnet"
         );
       }
 
@@ -103,7 +103,7 @@ const App = () => {
 
         let convertedBalance = window.web3.utils.fromWei(
           myStake.toString(),
-          'Ether'
+          "Ether"
         );
 
         let myCustomStake = await tokenStaking.methods
@@ -112,7 +112,7 @@ const App = () => {
 
         let tempCustomdBalance = window.web3.utils.fromWei(
           myCustomStake.toString(),
-          'Ether'
+          "Ether"
         );
 
         setMyStake([convertedBalance, tempCustomdBalance]);
@@ -121,14 +121,14 @@ const App = () => {
         let tempTotalStaked = await tokenStaking.methods.totalStaked().call();
         convertedBalance = window.web3.utils.fromWei(
           tempTotalStaked.toString(),
-          'Ether'
+          "Ether"
         );
         let tempcustomTotalStaked = await tokenStaking.methods
           .customTotalStaked()
           .call();
         let tempconvertedBalance = window.web3.utils.fromWei(
           tempcustomTotalStaked.toString(),
-          'Ether'
+          "Ether"
         );
         setTotalStaked([convertedBalance, tempconvertedBalance]);
 
@@ -141,7 +141,7 @@ const App = () => {
       } else {
         setAppStatus(false);
         window.alert(
-          'TokenStaking contract is not deployed on this network, please change to testnet'
+          "TokenStaking contract is not deployed on this network, please change to testnet"
         );
       }
 
@@ -149,7 +149,7 @@ const App = () => {
       setLoader(false);
     } else if (!window.web3) {
       setAppStatus(false);
-      setAccount('Metamask is not detected');
+      setAccount("Metamask is not detected");
       setLoader(false);
     }
   };
@@ -169,30 +169,30 @@ const App = () => {
   const stakeHandler = () => {
     if (!appStatus) {
     } else {
-      if (!inputValue || inputValue === '0' || inputValue < 0) {
-        setInputValue('');
+      if (!inputValue || inputValue === "0" || inputValue < 0) {
+        setInputValue("");
       } else {
         setLoader(true);
-        let convertToWei = window.web3.utils.toWei(inputValue, 'Ether');
+        let convertToWei = window.web3.utils.toWei(inputValue, "Ether");
 
         //aproving tokens for spending
         testTokenContract.methods
           .approve(tokenStakingContract._address, convertToWei)
           .send({ from: account })
-          .on('transactionHash', (hash) => {
+          .on("transactionHash", (hash) => {
             if (page === 1) {
               tokenStakingContract.methods
                 .stakeTokens(convertToWei)
                 .send({ from: account })
-                .on('transactionHash', (hash) => {
+                .on("transactionHash", (hash) => {
                   setLoader(false);
                   fetchDataFromBlockchain();
                 })
-                .on('receipt', (receipt) => {
+                .on("receipt", (receipt) => {
                   setLoader(false);
                   fetchDataFromBlockchain();
                 })
-                .on('confirmation', (confirmationNumber, receipt) => {
+                .on("confirmation", (confirmationNumber, receipt) => {
                   setLoader(false);
                   fetchDataFromBlockchain();
                 });
@@ -200,26 +200,26 @@ const App = () => {
               tokenStakingContract.methods
                 .customStaking(convertToWei)
                 .send({ from: account })
-                .on('transactionHash', (hash) => {
+                .on("transactionHash", (hash) => {
                   setLoader(false);
                   fetchDataFromBlockchain();
                 })
-                .on('receipt', (receipt) => {
+                .on("receipt", (receipt) => {
                   setLoader(false);
                   fetchDataFromBlockchain();
                 })
-                .on('confirmation', (confirmationNumber, receipt) => {
+                .on("confirmation", (confirmationNumber, receipt) => {
                   setLoader(false);
                   fetchDataFromBlockchain();
                 });
             }
           })
-          .on('error', function(error) {
+          .on("error", function(error) {
             setLoader(false);
-            console.log('Error Code:', error.code);
+            console.log("Error Code:", error.code);
             console.log(error.message);
           });
-        setInputValue('');
+        setInputValue("");
       }
     }
   };
@@ -234,48 +234,48 @@ const App = () => {
         tokenStakingContract.methods
           .unstakeTokens()
           .send({ from: account })
-          .on('transactionHash', (hash) => {
+          .on("transactionHash", (hash) => {
             setLoader(false);
             fetchDataFromBlockchain();
           })
-          .on('receipt', (receipt) => {
+          .on("receipt", (receipt) => {
             setLoader(false);
             fetchDataFromBlockchain();
           })
-          .on('confirmation', (confirmationNumber, receipt) => {
+          .on("confirmation", (confirmationNumber, receipt) => {
             setLoader(false);
             fetchDataFromBlockchain();
           })
-          .on('error', function(error) {
-            console.log('Error Code:', error.code);
+          .on("error", function(error) {
+            console.log("Error Code:", error.code);
             console.log(error.message);
             setLoader(false);
           });
 
-        setInputValue('');
+        setInputValue("");
       } else if (page === 2) {
         tokenStakingContract.methods
           .customUnstake()
           .send({ from: account })
-          .on('transactionHash', (hash) => {
+          .on("transactionHash", (hash) => {
             setLoader(false);
             fetchDataFromBlockchain();
           })
-          .on('receipt', (receipt) => {
+          .on("receipt", (receipt) => {
             setLoader(false);
             fetchDataFromBlockchain();
           })
-          .on('confirmation', (confirmationNumber, receipt) => {
+          .on("confirmation", (confirmationNumber, receipt) => {
             setLoader(false);
             fetchDataFromBlockchain();
           })
 
-          .on('error', function(error) {
-            console.log('Error Code:', error.code);
+          .on("error", function(error) {
+            console.log("Error Code:", error.code);
             console.log(error.message);
             setLoader(false);
           });
-        setInputValue('');
+        setInputValue("");
       }
     }
   };
@@ -287,20 +287,20 @@ const App = () => {
       tokenStakingContract.methods
         .redistributeRewards()
         .send({ from: account })
-        .on('transactionHash', (hash) => {
+        .on("transactionHash", (hash) => {
           setLoader(false);
           fetchDataFromBlockchain();
         })
-        .on('receipt', (receipt) => {
+        .on("receipt", (receipt) => {
           setLoader(false);
           fetchDataFromBlockchain();
         })
-        .on('confirmation', (confirmationNumber, receipt) => {
+        .on("confirmation", (confirmationNumber, receipt) => {
           setLoader(false);
           fetchDataFromBlockchain();
         })
-        .on('error', function(error) {
-          console.log('Error Code:', error.code);
+        .on("error", function(error) {
+          console.log("Error Code:", error.code);
           console.log(error.code);
           setLoader(false);
         });
@@ -314,20 +314,20 @@ const App = () => {
       tokenStakingContract.methods
         .customRewards()
         .send({ from: account })
-        .on('transactionHash', (hash) => {
+        .on("transactionHash", (hash) => {
           setLoader(false);
           fetchDataFromBlockchain();
         })
-        .on('receipt', (receipt) => {
+        .on("receipt", (receipt) => {
           setLoader(false);
           fetchDataFromBlockchain();
         })
-        .on('confirmation', (confirmationNumber, receipt) => {
+        .on("confirmation", (confirmationNumber, receipt) => {
           setLoader(false);
           fetchDataFromBlockchain();
         })
-        .on('error', function(error) {
-          console.log('Error Code:', error.code);
+        .on("error", function(error) {
+          console.log("Error Code:", error.code);
           console.log(error.code);
           setLoader(false);
         });
@@ -341,20 +341,20 @@ const App = () => {
       tokenStakingContract.methods
         .claimTst()
         .send({ from: account })
-        .on('transactionHash', (hash) => {
+        .on("transactionHash", (hash) => {
           setLoader(false);
           fetchDataFromBlockchain();
         })
-        .on('receipt', (receipt) => {
+        .on("receipt", (receipt) => {
           setLoader(false);
           fetchDataFromBlockchain();
         })
-        .on('confirmation', (confirmationNumber, receipt) => {
+        .on("confirmation", (confirmationNumber, receipt) => {
           setLoader(false);
           fetchDataFromBlockchain();
         })
-        .on('error', function(error) {
-          console.log('Error Code:', error.code);
+        .on("error", function(error) {
+          console.log("Error Code:", error.code);
           console.log(error.code);
           setLoader(false);
         });

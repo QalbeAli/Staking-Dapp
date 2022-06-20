@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import classes from './Navigation.module.css';
+import React, { useState } from "react";
+import classes from "./Navigation.module.css";
 
 const Navigation = (props) => {
-  const [poolStatus, setPoolStatus] = useState('default');
+  const [poolStatus, setPoolStatus] = useState("default");
 
   const changePool = (val) => {
     if (val === poolStatus) {
@@ -16,27 +16,25 @@ const Navigation = (props) => {
     <div className={classes.navigation}>
       <button
         className={
-          poolStatus === 'default'
+          poolStatus === "default"
             ? classes.buttonActive
             : classes.buttonNonActive
         }
         onClick={() => {
-          changePool('default');
+          changePool("default");
         }}
       >
-        {props.apy[0]}% (APY)
+        {props.apy[0]} % (APY)
       </button>
+
       <button
         className={
-          poolStatus === 'custom'
+          poolStatus === "custom"
             ? classes.buttonActive
             : classes.buttonNonActive
         }
-        onClick={() => {
-          changePool('custom');
-        }}
       >
-        {props.apy[1]}% (APY)
+        {props.apy[1]} % (APY)
       </button>
     </div>
   );
